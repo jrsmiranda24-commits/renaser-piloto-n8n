@@ -1,0 +1,49 @@
+{
+  "ejecucion": "4",
+  "escenario": "recuperacion",
+  "registro_validado": {
+    "nombre": "Bruno Ejemplo",
+    "email": "bruno@example.test",
+    "evento": "RENASER-PILOTO-N8N",
+    "interes": "asistir",
+    "consentimiento_email": true,
+    "whatsapp_disponible": false,
+    "simular_fallo": false,
+    "escenario": "recuperacion",
+    "clave": "RENASER-PILOTO-N8N|bruno@example.test",
+    "fecha": "2026-10-14T18:13:47.541Z"
+  },
+  "almacenamiento": {
+    "tabla": "RENASER_PILOTO_CONTACTOS",
+    "fila_id": 2,
+    "clave": "RENASER-PILOTO-N8N|bruno@example.test",
+    "duplicado": true
+  },
+  "clasificacion": {
+    "categoria": "prioritario",
+    "responsable": "C",
+    "metodo": "reglas explícitas"
+  },
+  "seguimiento": {
+    "resultado": "completado_simulado",
+    "intentos": "2",
+    "accion": "Esperar respuesta explícita; no confirmar asistencia",
+    "envio_real": false,
+    "whatsapp_api_llamada": false
+  },
+  "estado_final": {
+    "clave": "RENASER-PILOTO-N8N|bruno@example.test",
+    "nombre": "Bruno Ejemplo",
+    "email": "bruno@example.test",
+    "evento": "RENASER-PILOTO-N8N",
+    "clasificacion": "prioritario",
+    "responsable": "C",
+    "estado": "seguimiento_prueba_registrado",
+    "seguimiento": "completado_simulado",
+    "intentos": "2",
+    "id": 2,
+    "createdAt": "2026-10-14T18:13:09.726Z",
+    "updatedAt": "2026-10-14T18:13:47.687Z"
+  },
+  "alcance": "Piloto n8n con datos ficticios; CRM y canales reales pendientes"
+}

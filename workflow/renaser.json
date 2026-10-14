@@ -1,0 +1,571 @@
+{
+  "name": "RENASER | Captación y seguimiento | Piloto controlado",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9f5db717-ad5c-4271-8e4d-20a937714819",
+      "name": "Ejecutar piloto",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "input-escenario",
+              "name": "escenario",
+              "value": "valido",
+              "type": "string"
+            },
+            {
+              "id": "input-nombre",
+              "name": "nombre",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "input-email",
+              "name": "email",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "input-evento",
+              "name": "evento",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "input-interes",
+              "name": "interes",
+              "value": "asistir",
+              "type": "string"
+            },
+            {
+              "id": "input-consentimiento_email",
+              "name": "consentimiento_email",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "input-whatsapp_disponible",
+              "name": "whatsapp_disponible",
+              "value": false,
+              "type": "boolean"
+            },
+            {
+              "id": "input-simular_fallo",
+              "name": "simular_fallo",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "17e8493b-8ff4-40e1-8640-1a8a07eeab8f",
+      "name": "Escenario de prueba",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const registro={...$json};\nconst escenario=registro.escenario;\nif(!['valido','fallo','recuperacion','sin_permiso'].includes(escenario)) throw new Error('Escenario no admitido');\nregistro.email=String(registro.email??'').trim().toLowerCase();\nif(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(registro.email)||!registro.nombre||!registro.evento)throw new Error('Registro inválido');\nif(typeof registro.consentimiento_email!=='boolean')throw new Error('Consentimiento explícito requerido');\nreturn [{json:{...registro,clave:registro.evento+'|'+registro.email,fecha:new Date().toISOString()}}];"
+      },
+      "id": "573dc328-2d07-467c-ad1b-16731b854f49",
+      "name": "Validar registro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "RENASER_PILOTO_CONTACTOS"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "clave",
+              "keyValue": "={{ $json.clave }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "86fbe49d-2399-424a-9920-a3355e1c0fa6",
+      "name": "Buscar inscripción",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        704,
+        288
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const entrada=$('Validar registro').first().json;\nconst previo=$input.first().json;\nconst duplicado=Boolean(previo.id);\nreturn [{json:{clave:entrada.clave,nombre:entrada.nombre,email:entrada.email,evento:entrada.evento,\nclasificacion:duplicado?previo.clasificacion:'pendiente',responsable:duplicado?previo.responsable:'C',\nestado:duplicado?previo.estado:'registrado',seguimiento:duplicado?previo.seguimiento:'pendiente',\nintentos:duplicado?String(previo.intentos):'0',duplicado,registro_previo_id:previo.id??null}}];"
+      },
+      "id": "d6ed03e5-3b25-4ac4-a4a7-442af77186f1",
+      "name": "Preparar almacenamiento",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        928,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "RENASER_PILOTO_CONTACTOS"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "clave",
+              "keyValue": "={{ $json.clave }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "clave": "={{ $json.clave }}",
+            "nombre": "={{ $json.nombre }}",
+            "email": "={{ $json.email }}",
+            "evento": "={{ $json.evento }}",
+            "clasificacion": "={{ $json.clasificacion }}",
+            "responsable": "={{ $json.responsable }}",
+            "estado": "={{ $json.estado }}",
+            "seguimiento": "={{ $json.seguimiento }}",
+            "intentos": "={{ $json.intentos }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "clave",
+              "displayName": "clave",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "evento",
+              "displayName": "evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "clasificacion",
+              "displayName": "clasificacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "responsable",
+              "displayName": "responsable",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "seguimiento",
+              "displayName": "seguimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "intentos",
+              "displayName": "intentos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d1601986-cd20-4b2f-a524-b85f65e0c842",
+      "name": "Guardar registro",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1152,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const guardado=$input.first().json;\nconst entrada=$('Validar registro').first().json;\nreturn [{json:{...guardado,clasificacion:entrada.interes==='asistir'?'prioritario':'informativo',responsable:'C'}}];"
+      },
+      "id": "98d7cc82-8af2-45e3-a7de-c2723a08a808",
+      "name": "Clasificar interés",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1392,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const r=$input.first().json;\nconst entrada=$('Validar registro').first().json;\nlet accion;\nif(!entrada.consentimiento_email){r.estado='sin_permiso_email';r.seguimiento='bloqueado_sin_permiso';accion='No preparar comunicación';}\nelse if(r.seguimiento==='completado_simulado'){accion='Omitir: seguimiento ya registrado';}\nelse if(entrada.simular_fallo){r.estado='pendiente_revision';r.seguimiento='fallo_simulado';r.intentos=String(Number(r.intentos)+1);r.responsable='D';accion='Revisar canal alternativo autorizado y reintentar';}\nelse{r.estado='seguimiento_prueba_registrado';r.seguimiento='completado_simulado';r.intentos=String(Number(r.intentos)+1);accion='Esperar respuesta explícita; no confirmar asistencia';}\nreturn [{json:{...r,accion,envio_real:false,whatsapp_api_llamada:false,canal:'email_prueba',fecha:new Date().toISOString()}}];"
+      },
+      "id": "3c31626b-0d39-4372-a870-5e0ace4afff3",
+      "name": "Seguimiento de prueba",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1616,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "RENASER_PILOTO_CONTACTOS"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "clave",
+              "keyValue": "={{ $json.clave }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "clave": "={{ $json.clave }}",
+            "nombre": "={{ $json.nombre }}",
+            "email": "={{ $json.email }}",
+            "evento": "={{ $json.evento }}",
+            "clasificacion": "={{ $json.clasificacion }}",
+            "responsable": "={{ $json.responsable }}",
+            "estado": "={{ $json.estado }}",
+            "seguimiento": "={{ $json.seguimiento }}",
+            "intentos": "={{ $json.intentos }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "clave",
+              "displayName": "clave",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "evento",
+              "displayName": "evento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "clasificacion",
+              "displayName": "clasificacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "responsable",
+              "displayName": "responsable",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "seguimiento",
+              "displayName": "seguimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "intentos",
+              "displayName": "intentos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "b5477ee7-20b6-4655-a04d-2824824ea63c",
+      "name": "Actualizar estado",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const entrada=$('Validar registro').first().json;\nconst decision=$('Preparar almacenamiento').first().json;\nconst seguido=$('Seguimiento de prueba').first().json;\nconst final=$input.first().json;\nreturn [{json:{ejecucion:$execution.id,escenario:entrada.escenario,registro_validado:entrada,\nalmacenamiento:{tabla:'RENASER_PILOTO_CONTACTOS',fila_id:final.id,clave:final.clave,duplicado:decision.duplicado},\nclasificacion:{categoria:final.clasificacion,responsable:final.responsable,metodo:'reglas explícitas'},\nseguimiento:{resultado:final.seguimiento,intentos:final.intentos,accion:seguido.accion,envio_real:false,whatsapp_api_llamada:false},\nestado_final:final,alcance:'Piloto n8n con datos ficticios; CRM y canales reales pendientes'}}];"
+      },
+      "id": "dae4fce1-4273-46c4-82bf-27d4f0bb2ef5",
+      "name": "Evidencia final",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## RENASER · Piloto controlado\nRegistro → persistencia → reglas → seguimiento de prueba → estado.\nData Tables almacena el piloto. CRM y canales reales: pendientes.\nNo publicar ni activar: ejecución manual, sin envíos reales.\nEscenario válido dos veces = caso nuevo y duplicado. Luego fallo y recuperación.",
+        "height": 180,
+        "width": 720,
+        "color": 5
+      },
+      "id": "1e8a88ff-bd45-400d-b420-dbdb94db48d8",
+      "name": "Alcance del piloto",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Ejecutar piloto": {
+      "main": [
+        [
+          {
+            "node": "Escenario de prueba",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Escenario de prueba": {
+      "main": [
+        [
+          {
+            "node": "Validar registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar registro": {
+      "main": [
+        [
+          {
+            "node": "Buscar inscripción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar inscripción": {
+      "main": [
+        [
+          {
+            "node": "Preparar almacenamiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar almacenamiento": {
+      "main": [
+        [
+          {
+            "node": "Guardar registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar registro": {
+      "main": [
+        [
+          {
+            "node": "Clasificar interés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificar interés": {
+      "main": [
+        [
+          {
+            "node": "Seguimiento de prueba",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seguimiento de prueba": {
+      "main": [
+        [
+          {
+            "node": "Actualizar estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar estado": {
+      "main": [
+        [
+          {
+            "node": "Evidencia final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "active": false
+}

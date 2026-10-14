@@ -1,0 +1,49 @@
+{
+  "ejecucion": "2",
+  "escenario": "valido",
+  "registro_validado": {
+    "nombre": "Andrea Ejemplo",
+    "email": "andrea@example.test",
+    "evento": "RENASER-PILOTO-N8N",
+    "interes": "asistir",
+    "consentimiento_email": true,
+    "whatsapp_disponible": false,
+    "simular_fallo": false,
+    "escenario": "valido",
+    "clave": "RENASER-PILOTO-N8N|andrea@example.test",
+    "fecha": "2026-10-14T18:11:31.410Z"
+  },
+  "almacenamiento": {
+    "tabla": "RENASER_PILOTO_CONTACTOS",
+    "fila_id": 1,
+    "clave": "RENASER-PILOTO-N8N|andrea@example.test",
+    "duplicado": true
+  },
+  "clasificacion": {
+    "categoria": "prioritario",
+    "responsable": "C",
+    "metodo": "reglas explícitas"
+  },
+  "seguimiento": {
+    "resultado": "completado_simulado",
+    "intentos": "1",
+    "accion": "Omitir: seguimiento ya registrado",
+    "envio_real": false,
+    "whatsapp_api_llamada": false
+  },
+  "estado_final": {
+    "clave": "RENASER-PILOTO-N8N|andrea@example.test",
+    "nombre": "Andrea Ejemplo",
+    "email": "andrea@example.test",
+    "evento": "RENASER-PILOTO-N8N",
+    "clasificacion": "prioritario",
+    "responsable": "C",
+    "estado": "seguimiento_prueba_registrado",
+    "seguimiento": "completado_simulado",
+    "intentos": "1",
+    "id": 1,
+    "createdAt": "2026-10-14T18:08:40.499Z",
+    "updatedAt": "2026-10-14T18:11:31.583Z"
+  },
+  "alcance": "Piloto n8n con datos ficticios; CRM y canales reales pendientes"
+}
