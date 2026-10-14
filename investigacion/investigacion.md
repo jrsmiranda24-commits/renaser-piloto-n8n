@@ -1,91 +1,118 @@
-# Un piloto de seguimiento para RENASER
+RENASER  /  INVESTIGACIÓN 
+Cómo mejoraría la captación de asistentes sin 
+contratar más personal 
+Investigación para la prueba técnica de RENASER  |  Jarvis Miranda Mamani  |  14 de octubre de 2026 
+Mi punto de partida es sencillo: antes de pensar en un evento con 3.000 personas, necesitamos saber 
+si el equipo puede llevar a 30 asistentes reales con los recursos que ya tiene. Hoy hay 200 contactos, 
+cuatro trabajadores, un CRM a medio implementar y un seguimiento que no está organizado. Ahí veo el 
+primer problema que resolvería. 
+No empezaría haciendo una plataforma nueva. Primero ordenaría los contactos y su estado: 
+interesado, inscrito, confirmado y asistió. Son cosas distintas. Tener una lista de 200 personas no 
+significa que 200 quieran asistir, y enviar un mensaje tampoco significa que alguien haya confirmado. 
+Las tres alternativas que revisé 
+1. Seguir con el CRM e integrar n8n. Es la opción que escogería para el piloto. El formulario enviaría 
+la información a un flujo que revise campos, evite duplicados, cree o actualice el contacto y deje una 
+tarea de seguimiento. El CRM seguiría siendo el lugar donde el equipo consulta el estado oficial; n8n 
+se encargaría del trabajo repetitivo. Tiene sentido porque no obliga a rehacer lo que ya existe. Antes de 
+usarlo con personas reales tendría que comprobar la API del CRM, los permisos, los errores y los 
+reintentos. 
+2. Mantener el CRM y utilizar Make. También permite conectar formularios y servicios sin programarlo 
+todo. Puede ser más rápido si ya existe un conector listo para el CRM. El punto a vigilar es el consumo: 
+Make incluye 1.000 créditos mensuales en su plan Free, y un recorrido con varios módulos puede 
+consumir más de un crédito. No lo descartaría para siempre, pero probaría primero cuánto cuesta un 
+registro completo y cómo recupera los fallos. 
+3. Google Sheets con Apps Script. Serviría para salir de una urgencia: lista de contactos, 
+responsables y tareas pendientes. Sin embargo, cuando varias personas trabajan a la vez hay que 
+cuidar la edición, los permisos y las duplicaciones. Además, Apps Script tiene cuotas de ejecución. Lo 
+usaría como apoyo temporal, no como la base definitiva si queremos crecer. 
+Mi decisión 
+Me quedo con el CRM actual y n8n, siempre que la conexión sea viable. Es el camino que menos 
+cambia la operación y deja a las cuatro personas trabajando sobre una misma lista. En esta primera 
+semana utilizaría reglas claras para validar y asignar contactos; la IA quedaría para resumir mensajes o 
+preparar borradores, siempre revisados. No hace falta poner un agente de IA donde basta una 
+condición sencilla. 
+ 
+14 de octubre de 2026  ·  1 
 
-## Qué recomiendo y qué pude comprobar
 
-Recomiendo conservar el CRM y conectar el registro y el seguimiento con n8n. Empezaría con un piloto pequeño para comprobar dónde se pierden interesados y cuánto trabajo manual queda. El primer objetivo sigue siendo 30 asistentes reales. No tomaría la meta de 3.000 como un problema resuelto por automatizar un formulario.
+RENASER  /  INVESTIGACIÓN 
+Qué recursos necesitaría 
+Separé los precios publicados de lo que yo presupuestaría para una prueba. No son una cotización de 
+RENASER ni un gasto aprobado. 
+•  n8n Cloud anuncia Starter desde 20 EUR/mes y Pro desde 50 EUR/mes, con facturación anual; los 
+límites publicados son 2.500 y 10.000 ejecuciones respectivamente. Si cada registro activa un flujo, 
+3.000 registros ya pueden superar el primer límite, incluso antes de sumar recordatorios. [2] 
+•  Alojar n8n Community por cuenta propia podría requerir, como estimación inicial mía, unos USD 10 
+a 25 mensuales para infraestructura básica. También hay que contar respaldos, mantenimiento y 
+tiempo de administración. 
+•  Make Free publica 1.000 créditos al mes. A modo de ejemplo, si cada contacto consumiera seis 
+créditos, 200 contactos serían 1.200 créditos y 3.000 serían 18.000. Hay que medir el consumo real 
+del escenario antes de tomar una decisión. [3] 
+•  Para Sheets y Apps Script podríamos usar cuentas existentes, pero hay cuotas y gastos indirectos 
+de soporte. El costo de correo, telefonía e IA depende del volumen y del proveedor; no lo 
+consideraría gratis por defecto. [4] 
+Cómo organizaría los primeros siete días 
+No contrataría gente. Repartiría responsabilidades: una persona para integraciones y calidad, una para 
+captación, otra para comunicaciones y seguimiento, y otra para operación y medición. Los nombres 
+concretos se decidirían con la empresa. 
+Día 1. Revisar el CRM, permisos de contacto y los 200 registros. Detectar duplicados y saber qué datos 
+faltan. 
+Día 2. Conectar un formulario de prueba, guardar el contacto en el sistema definido y comprobar que 
+no se pierda ni se duplique. 
+Día 3. Crear tareas de seguimiento y comprobar un canal alternativo autorizado al de WhatsApp. 
+Día 4. Hacer una prueba controlada con contactos que aceptaron comunicaciones. Registrar 
+respuestas y pendientes. 
+Día 5. Revisar errores, reintentos y la recuperación si el sistema se cae. Corregir lo que falle. 
+Día 6. Ensayar confirmaciones y control de asistencia. Preparar una lista operativa para el evento. 
+Día 7. Mostrar resultados a dirección y decidir si se amplía, se ajusta o se detiene el piloto. 
+Qué evitaría durante esa semana 
+No gastaría tiempo desarrollando otra web, montando varios agentes autónomos o llenando el 
+calendario de publicaciones sin saber dónde se pierden los interesados. Tampoco enviaría mensajes 
+masivos a contactos que no hayan autorizado ese canal. La prioridad es que cada persona tenga un 
+estado, un responsable y un siguiente paso. 
+ 
+14 de octubre de 2026  ·  2 
+Para el piloto conectado al CRM, presupuestaría 24 a 36 horas técnicas y 12 a 16 horas del resto del equipo
+durante la semana. Son estimaciones propias, sujetas a accesos y calidad de datos; no son tiempos medidos
+en RENASER. La prueba ejecutada usó n8n Cloud sin activar pagos.
 
-Durante esta prueba construí un workflow en n8n Cloud y lo ejecuté con datos ficticios. Guarda registros en una Data Table, clasifica por reglas, registra un seguimiento de prueba y actualiza el estado. Probé un caso nuevo, un duplicado, un fallo simulado y su recuperación. El CRM real y los proveedores de mensajes todavía no están conectados. Lo que se ve funcionar es el piloto, no la operación comercial completa.
 
-## Las tres opciones que comparé
-
-CRM actual con n8n. Es mi primera elección si la integración del CRM es viable. Separa el proceso del canal: recibir, buscar el contacto, crear una tarea y guardar el resultado aunque WhatsApp falle. n8n ofrece webhooks y tablas internas [1, 2]. Alguien debe mantener credenciales, alertas y recuperación. Si el CRM ya hace todo esto con la licencia actual, usaría esas funciones antes de agregar componentes.
-
-CRM actual con Make. También resuelve procesos con escenarios y conectores. Lo consideraría si su conector del CRM evita trabajo que n8n no resuelve fácilmente. Lo dejo como segunda opción porque ya disponemos de n8n y necesito comparar consumo por recorrido: las acciones consumen créditos y los escenarios pueden detenerse al agotarlos [4]. No probé la integración en Make; mi descarte es provisional, no una afirmación de que sea peor.
-
-Google Sheets con Apps Script. Sirve como lista operativa temporal y es familiar para el equipo. No lo elegiría como registro oficial para crecer: tendría que programar deduplicación, permisos, concurrencia y recuperación alrededor de una hoja editable. Apps Script tiene cuotas por usuario y límites de ejecución [5]. Lo mantendría como exportación de contingencia con acceso restringido, no como un CRM nuevo construido a medida.
-
-## Tiempo y costo que presupuestaría
-
-Para un piloto conectado al CRM, estimo 24 a 36 horas técnicas y 12 a 16 del resto del equipo en siete días. Make podría requerir 20 a 32 horas técnicas; Sheets y Apps Script, 16 a 28. Son estimaciones propias, sujetas a revisar la API, la calidad de los contactos y la experiencia del equipo. No son tiempos medidos en RENASER.
-
-El piloto ejecutado usó la prueba de n8n Cloud disponible; no activé pagos. La cuenta mostraba 14 días y una cuota de 1.000 ejecuciones. Como referencia, n8n publica EUR 20/mes para Starter y EUR 50/mes para Pro, facturados anualmente, con 2.500 y 10.000 ejecuciones [3]. No equivalen a una contratación mensual sin compromiso anual.
-
-Make publica 1.000 créditos mensuales en Free [4]; el importe pagado debe confirmarse en su selector. Suponiendo seis acciones facturables, 200 registros consumirían unas 1.200 acciones antes de recordatorios. Para Sheets, el costo incremental podría ser USD 0 si las cuentas actuales bastan; mantenimiento y cuotas siguen contando. Google publica 100 destinatarios de correo al día en cuentas personales y 1.500 en Workspace, sujetos a condiciones [5]. No contrataría servicios hasta conocer volumen y canal. Publicidad, local, llamadas y horas del equipo van aparte.
-
----
-
-## Cómo lo implementaría en siete días
-
-Asignaría cuatro funciones a los trabajadores actuales: A integra y revisa datos; B consigue interesados y alianzas; C atiende comunicaciones; D coordina el evento y revisa pendientes. Son roles propuestos, no contrataciones. En el workflow de prueba, C recibe seguimiento normal y D revisa el fallo.
-
-Día 1. A y C revisan CRM, acceso, campos y permisos de los 200 contactos. D define inscrito, confirmado y asistió. B identifica fuentes de interesados. Salida: inventario y línea base, no una migración apresurada.
-
-Día 2. A conecta formulario y CRM o una tabla intermedia bien delimitada. C prueba datos inválidos y duplicados. El CRM mantiene los estados comerciales; la tabla del piloto no se convierte en otra verdad paralela.
-
-Día 3. A y C prueban canal autorizado, bajas y manejo de fallos. D verifica alertas y responsables. Se distingue preparar una comunicación, enviarla, entregarla y recibir respuesta.
-
-Día 4. B y C hacen un piloto acotado con permisos comprobados. D mide respuesta, inscripciones y trabajo manual. Si el evento aún no ocurre, no reportan asistencia como resultado.
-
-Día 5. A corrige lo observado y ensaya recuperación y respaldo. C revisa mensajes y dudas frecuentes. IA puede ayudar a resumir o redactar, con revisión; no decide permiso, aforo o asistencia.
-
-Día 6. D ensaya confirmación y registro presencial. C prepara excepciones; B revisa qué fuentes aportan interesados útiles. El equipo debe operar aunque un canal esté caído.
-
-Día 7. Los cuatro presentan conversiones, fallos, costos y carga manual. Dirección decide ampliar, corregir o detener. No prometería 30 asistentes solo por terminar la integración.
-
-## Si WhatsApp no funciona durante 48 horas
-
-Mantendría abierta la inscripción y suspendería ese transporte. Usaría correo o llamadas solo donde exista autorización para ese canal. Los casos sin alternativa quedarían visibles con responsable y próxima acción. Al volver WhatsApp, conciliaría pendientes para no repetir comunicaciones resueltas. En el piloto no hay ningún nodo de envío: el seguimiento y su fallo son simulados y se guardan como tales.
-
-## Tres formas en que puede fallar el plan
-
-Datos inconsistentes. Un reenvío puede crear duplicados o perder contexto. A concilia entradas y CRM y prueba claves por contacto y evento. La demo deduplicó ejecuciones sucesivas; falta comprobar concurrencia y restricciones del CRM. Una búsqueda previa no garantiza unicidad bajo carga.
-
-Canal caído o permisos insuficientes. C puede quedar sin forma válida de contactar. D revisa pendientes y prioriza urgencias; A conserva el registro y habilita solo la alternativa autorizada. Permiso de WhatsApp no significa permiso para cualquier canal.
-
-Falta de demanda o exceso de excepciones. Los 200 contactos pueden no tener interés y cuatro trabajadores pueden saturarse. B mide fuentes y D compara pendientes con minutos disponibles. Si no alcanza la capacidad, reduciría el piloto antes de aumentar captación.
-
----
-
-## Qué mediría antes de crecer
-
-Separaría contactos, interesados, inscritos, confirmados y asistentes. Mediría conversión por fuente, primera respuesta, comunicaciones fallidas, duplicados, minutos por excepción y costo por asistente real. La asistencia se registra en el evento, no se deduce de un mensaje preparado.
-
-Llegar a 30 asistentes desde 200 contactos exige una conversión final del 15 %. Es una relación matemática, no una tasa comprobada. Si 25 % se inscribe y 60 % asiste, harían falta 20.000 contactos para 3.000 asistentes. Son supuestos. Antes de comprar más captación exigiría datos conciliados, pendientes manejables, costos conocidos y aforo confirmado.
-
-## Evidencia del piloto ejecutado
-
-Workflow: RENASER Captación y seguimiento Piloto controlado. Motor: n8n Cloud. Almacenamiento: Data Table RENASER_PILOTO_CONTACTOS. Se creó vacía; los registros aparecieron al ejecutar el flujo. El panel local no es el motor de esta demostración.
-
-Ejecución 1. Andrea Ejemplo, fila 1, duplicado false. Clasificación prioritario, responsable C, seguimiento completado_simulado, intentos 1, estado seguimiento_prueba_registrado.
-
-Ejecución 2. El mismo registro, fila 1, duplicado true. Acción Omitir seguimiento ya registrado; intentos permanece en 1. No se creó otra inscripción.
-
-Ejecución 3. Bruno Ejemplo, fila 2, fallo controlado. Quedó pendiente_revision, responsable D, seguimiento fallo_simulado e intentos 1.
-
-Ejecución 4. Recuperación de Bruno, misma fila 2. Estado seguimiento_prueba_registrado, seguimiento completado_simulado e intentos 2. En todos los casos envio_real y whatsapp_api_llamada fueron false. Las salidas JSON se guardaron aparte de la configuración del workflow.
-
-Falta validar formulario real, CRM, canales, bajas, accesos y concurrencia. Data Tables sirve para almacenamiento ligero o moderado y tiene límites [2]; no equivale a un CRM ni demuestra operación para 3.000 asistentes. Node.js y sus 17 pruebas locales se conservan como respaldo; no certifican el workflow de n8n.
-
-## Fuentes consultadas
-
-Consulta: 14 de octubre de 2026. Capacidades y tarifas proceden de fuentes oficiales; recomendación, horas y plan son mi evaluación. No entrevisté al equipo ni medí campañas comerciales.
-
-[1] n8n Webhook, recepción y autenticación. https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/
-
-[2] n8n Data Tables, persistencia, acceso y límites. https://docs.n8n.io/build/work-with-data/data-tables/
-
-[3] n8n Pricing, planes y facturación. https://n8n.io/pricing/
-
-[4] Make Pricing, créditos, nivel gratuito y agotamiento. https://www.make.com/pricing
-
-[5] Google Apps Script Quotas, límites por cuenta y ejecución. https://developers.google.com/apps-script/guides/services/quotas
+RENASER  /  INVESTIGACIÓN 
+Qué mediría para saber si de verdad mejoró 
+Empezaría con cinco números que el equipo pueda revisar cada día: contactos válidos con permiso, 
+nuevos inscritos, confirmaciones explícitas, asistentes comprobados y contactos que llevan demasiado 
+tiempo sin seguimiento. También miraría el tiempo que dedica el equipo a tareas manuales y los errores 
+de envío. 
+Para conseguir 30 asistentes desde 200 contactos haría falta una conversión final del 15 %. Es una 
+referencia matemática, no algo que ya haya ocurrido. De la misma manera, si supusiéramos que el 25 
+% de los contactos se inscribe y que el 60 % de los inscritos asiste, llegar a 3.000 asistentes requeriría 
+unos 20.000 contactos. Esos porcentajes todavía deben medirse en el piloto. 
+Qué se hizo para esta prueba 
+Riesgos que no dejaría sin atender 
+Si WhatsApp deja de funcionar: mantendría las tareas registradas y utilizaría correo o llamadas solo 
+con autorización. Cuando vuelva el servicio revisaría las tareas antes de reintentar, para no enviar 
+mensajes repetidos. 
+Si hay duplicados o datos incorrectos: detendría la ampliación, revisaría qué parte del recorrido los 
+produce y haría una conciliación con el CRM. 
+Si los contactos no confirman: no aumentaría la publicidad a ciegas. Revisaría los mensajes, 
+tiempos de respuesta y motivos de abandono con los cuatro responsables. 
+Conclusión 
+Mi recomendación es comenzar pequeño y medir bien. Si el equipo consigue organizar los 200 
+contactos, seguirlos sin pérdidas y comprobar cuántos llegan al evento, tendremos datos para decidir 
+qué automatizar después. Recién con ese resultado propondría el presupuesto y la capacidad 
+necesaria para acercarnos a los 3.000 asistentes. 
+Fuentes revisadas 
+n8n, documentación del nodo Webhook: https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/  
+n8n, precios y límites: https://n8n.io/pricing/  
+Make, precios y créditos: https://www.make.com/pricing  
+Google, cuotas de Apps Script: https://developers.google.com/apps-script/guides/services/quotas  
+Supabase, precios y límites (alternativa no elegida): https://supabase.com/pricing  
+14 de octubre de 2026  ·  3 
+Construí y ejecuté el piloto en n8n Cloud con datos ficticios y almacenamiento en Data Tables. Valida el registro,
+busca duplicados por evento y correo, clasifica por reglas, registra un seguimiento simulado y actualiza la misma
+fila. No se enviaron correos ni mensajes reales.
+Comprobé cuatro ejecuciones: Andrea se registró en la fila 1; al repetirla conservó la fila y un intento. Bruno
+quedó en pendiente_revision, responsable D; al recuperarlo conservó la fila 2 y llegó a dos intentos. La tabla
+mantuvo dos filas al recargarla. Falta integrar formulario, CRM y canales reales, y probar bajas y concurrencia.
+Las 17 pruebas de Node.js son un respaldo separado; no certifican n8n.
+n8n, Data Tables (almacenamiento del piloto): https://docs.n8n.io/build/work-with-data/data-tables/
